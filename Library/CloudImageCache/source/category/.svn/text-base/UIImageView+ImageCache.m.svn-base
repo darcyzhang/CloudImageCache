@@ -1,0 +1,43 @@
+//
+//  UIImageView+UIImageView___ImageCache.m
+//  webImageDemo
+//
+//  Created by zhangyun on 13-11-19.
+//  Copyright (c) 2013年 zhangyun. All rights reserved.
+//
+
+#import "UIImageView+ImageCache.h"
+#import "QVImageLoader.h"
+
+@implementation UIImageView (ImageCache)
+
+- (void)setImageWithURL:(NSString *)URL
+{
+    [self setImageWithURL:URL policy:QVImageCachePolicyFrequencyLow incrementally:NO];
+}
+
+- (void)setImageWithURL:(NSString *)URL  policy:(QVImageCachePolicy)policy
+{
+    [self setImageWithURL:URL policy:policy incrementally:NO];
+}
+
+- (void)setImageWithURL:(NSString *)URL  incrementally:(BOOL)incrementally
+{
+    [self setImageWithURL:URL policy:QVImageCachePolicyFrequencyLow incrementally:incrementally];
+}
+
+- (void)setImageWithURL:(NSString *)URL  policy:(QVImageCachePolicy)policy incrementally:(BOOL)incrementally
+{
+    __weak UIImageView *wself = self;
+    [QVImageLoader imageURL:URL completed:^(UIImage *image)
+     {
+         if (!wself || !image)
+         {
+             return ;
+         }
+         
+         wself.image = image;
+     } policy:policy incrementally:incrementally];
+}
+
+@end
